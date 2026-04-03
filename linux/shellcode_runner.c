@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/mman.h>
 
+// Replace this
 unsigned char buf[] = "\x90";
 
 int main(int argc, char **argv)
