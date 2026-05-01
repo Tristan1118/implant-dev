@@ -1,8 +1,10 @@
 #pragma once
 #include <windows.h>
 #include <winternl.h>
+#include "native.h"
 
 typedef struct _INJECT_CTX {
+    NT_APIS             api;
     PROCESS_INFORMATION pi;
     HANDLE              hProcess;
     HANDLE              hThread;
