@@ -15,9 +15,6 @@ option(USE_EXECUTE_REMOTE_THREAD "CreateRemoteThread execution"       ON)
 option(USE_EXECUTE_APC           "QueueUserAPC execution"             OFF)
 
 option(ENABLE_DEBUG "Enable debug output" ON)
-if(ENABLE_DEBUG)
-    target_compile_definitions(modularRemoteInjectCpp PRIVATE ENABLE_DEBUG)
-endif()
 
 macro(require_exactly_one PHASE)
     set(_count 0)
@@ -82,6 +79,9 @@ target_include_directories(modularRemoteInjectCpp PRIVATE
     ${CMAKE_BINARY_DIR}
 )
 
+if(ENABLE_DEBUG)
+    target_compile_definitions(modularRemoteInjectCpp PRIVATE ENABLE_DEBUG)
+endif()
 if(USE_SHELLCODE_FETCH_HTTP)
     target_compile_definitions(modularRemoteInjectCpp PRIVATE USE_SHELLCODE_FETCH_HTTP)
 endif()

