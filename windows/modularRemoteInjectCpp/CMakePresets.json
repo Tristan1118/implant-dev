@@ -10,6 +10,7 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe",
+                "USE_SHELLCODE_FETCH_HTTP": "ON",
                 "USE_CREATE_SUSPENDED":      "ON",
                 "USE_CREATE_PPID_SPOOF":     "OFF",
                 "USE_ALLOCATE_VALLOC":       "ON",

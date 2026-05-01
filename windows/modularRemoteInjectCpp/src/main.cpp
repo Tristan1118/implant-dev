@@ -2,6 +2,10 @@
 #include "context.h"
 #include <cstdio>
 
+#ifdef USE_SHELLCODE_FETCH_HTTP
+#include "phases/shellcode/fetch_http.h"
+#endif
+
 #ifdef USE_CREATE_SUSPENDED
 #include "phases/create/suspended.h"
 #endif
