@@ -17,6 +17,7 @@ BOOL GetShellcode_Http(INJECT_CTX* ctx) {
     }
     else {
         DBG("Invalid shellcode URL: %s", SHELLCODE_HTTP_URL);
+        return FALSE;
     }
 }
 
