@@ -67,7 +67,8 @@ allocate:
 #if defined(USE_ALLOCATE_VALLOC)
     if (!AllocateMemory_VAlloc(&ctx)) goto cleanup;
 #elif defined(USE_ALLOCATE_SECTION)
-    if (!AllocateMemory_Section(&ctx)) goto execute; // skip write and protect
+    if (!AllocateMemory_Section(&ctx)) goto cleanup;
+    else goto execute; // skip write and protect
 #else
     #error "No allocate technique selected"
 #endif
