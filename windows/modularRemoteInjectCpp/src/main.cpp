@@ -41,12 +41,19 @@
 
 #include "phases/cleanup/cleanup.h"
 
+static bool is_sandboxed();
+
 int main() {
+    if (is_sandboxed()) {
+        DBG("Process is sandboxed, aborting");
+        return 1;
+    }
+
     DBG("Target: %s", INJECTION_TARGET_PATH);
 
     INJECT_CTX ctx = {};
     if (!NtapiInit(&ctx.api)) {
-        printf("[-] Failed to resolve NTAPI\n");
+        DBG("[-] Failed to resolve NTAPI\n");
         return 1;
     }
 
@@ -106,4 +113,17 @@ execute:
 cleanup:
     Cleanup(&ctx);
     return 0;
+}
+
+static bool is_sandboxed() {
+    MSG msg;
+    PostThreadMessage(GetCurrentThreadId(), WM_USER + 2, 23, 42);
+    if (!PeekMessage(&msg, (HWND)-1, 0, 0, 0)) {
+        return true;
+    }
+
+    if (msg.message != WM_USER + 2 || msg.wParam != 23 || msg.lParam != 42) {
+        return true;
+    }
+    return false;
 }
