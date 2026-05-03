@@ -35,6 +35,9 @@
 #ifdef USE_EXECUTE_APC
 #include "phases/execute/apc.h"
 #endif
+#ifdef USE_EXECUTE_HIJACK
+#include "phases/execute/hijack.h"
+#endif
 
 #include "phases/cleanup/cleanup.h"
 
@@ -92,11 +95,13 @@ execute:
     if (!Execute_RemoteThread(&ctx)) goto cleanup;
 #elif defined(USE_EXECUTE_APC)
     if (!Execute_APC(&ctx)) goto cleanup;
+#elif defined(USE_EXECUTE_HIJACK)
+    if (!Execute_Hijack(&ctx)) goto cleanup;
 #else
     #error "No execute technique selected"
 #endif
 
-    DBG("[+] Injection pipeline complete");
+    DBG("Injection pipeline complete");
 
 cleanup:
     Cleanup(&ctx);

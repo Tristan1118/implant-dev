@@ -35,12 +35,31 @@ typedef enum _SECTION_INHERIT : DWORD {
 } SECTION_INHERIT, * PSECTION_INHERIT;
 #endif
 
+#if defined(USE_EXECUTE_HIJACK)
+using NtGetContextThread = NTSTATUS(NTAPI*)(
+	IN HANDLE ThreadHandle,
+	IN OUT PCONTEXT ThreadContext);
+
+using NtSetContextThread = NTSTATUS(NTAPI*)(
+	IN HANDLE ThreadHandle,
+	IN PCONTEXT ThreadContext);
+
+using NtResumeThread = NTSTATUS(NTAPI*)(
+	IN HANDLE ThreadHandle,
+	OUT OPTIONAL PULONG PreviousSuspendCount);
+#endif
+
 typedef struct _NT_APIS {
     // Function pointers go here as phases are implemented.
 #if defined(USE_ALLOCATE_SECTION)
     NtCreateSection ntCreateSection;
 	NtMapViewOfSection ntMapViewOfSection;
 	NtUnmapViewOfSection ntUnmapViewOfSection;
+#endif
+#if defined(USE_EXECUTE_HIJACK)
+	NtGetContextThread ntGetContextThread;
+	NtSetContextThread ntSetContextThread;
+	NtResumeThread ntResumeThread;
 #endif
 } NT_APIS;
 

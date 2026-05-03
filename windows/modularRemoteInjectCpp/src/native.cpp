@@ -15,6 +15,11 @@ BOOL NtapiInit(NT_APIS *api) {
     api->ntMapViewOfSection = (NtMapViewOfSection)GetProcAddress(hNtdll, "NtMapViewOfSection");
     api->ntUnmapViewOfSection = (NtUnmapViewOfSection)GetProcAddress(hNtdll, "NtUnmapViewOfSection");
 #endif
+#if defined(USE_EXECUTE_HIJACK)
+    api->ntGetContextThread = (NtGetContextThread)GetProcAddress(hNtdll, "NtGetContextThread");
+    api->ntSetContextThread = (NtSetContextThread)GetProcAddress(hNtdll, "NtSetContextThread");
+    api->ntResumeThread = (NtResumeThread)GetProcAddress(hNtdll, "NtResumeThread");
+#endif
 
     return TRUE;
 }
