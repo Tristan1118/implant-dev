@@ -10,15 +10,16 @@ BOOL NtapiInit(NT_APIS *api) {
 
     // Add GetProcAddress resolution here as phases are implemented.
     // Guard each block with the corresponding USE_* ifdef
+    api->ntClose = (fnNtClose)GetProcAddress(hNtdll, "NtClose");
 #if defined(USE_ALLOCATE_SECTION)
-    api->ntCreateSection = (NtCreateSection)GetProcAddress(hNtdll, "NtCreateSection");
-    api->ntMapViewOfSection = (NtMapViewOfSection)GetProcAddress(hNtdll, "NtMapViewOfSection");
-    api->ntUnmapViewOfSection = (NtUnmapViewOfSection)GetProcAddress(hNtdll, "NtUnmapViewOfSection");
+    api->ntCreateSection = (fnNtCreateSection)GetProcAddress(hNtdll, "NtCreateSection");
+    api->ntMapViewOfSection = (fnNtMapViewOfSection)GetProcAddress(hNtdll, "NtMapViewOfSection");
+    api->ntUnmapViewOfSection = (fnNtUnmapViewOfSection)GetProcAddress(hNtdll, "NtUnmapViewOfSection");
 #endif
 #if defined(USE_EXECUTE_HIJACK)
-    api->ntGetContextThread = (NtGetContextThread)GetProcAddress(hNtdll, "NtGetContextThread");
-    api->ntSetContextThread = (NtSetContextThread)GetProcAddress(hNtdll, "NtSetContextThread");
-    api->ntResumeThread = (NtResumeThread)GetProcAddress(hNtdll, "NtResumeThread");
+    api->ntGetContextThread = (fnNtGetContextThread)GetProcAddress(hNtdll, "NtGetContextThread");
+    api->ntSetContextThread = (fnNtSetContextThread)GetProcAddress(hNtdll, "NtSetContextThread");
+    api->ntResumeThread = (fnNtResumeThread)GetProcAddress(hNtdll, "NtResumeThread");
 #endif
 
     return TRUE;

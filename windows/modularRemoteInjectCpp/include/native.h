@@ -3,8 +3,11 @@
 #include <winternl.h>
 
 // Function pointer typedefs go here as phases are implemented.
+using fnNtClose = NTSTATUS(NTAPI*)(
+	IN HANDLE handle
+	);
 #if defined(USE_ALLOCATE_SECTION)
-using NtCreateSection = NTSTATUS(NTAPI*)(
+using fnNtCreateSection = NTSTATUS(NTAPI*)(
 	OUT PHANDLE SectionHandle,
 	IN ULONG DesiredAccess,
 	IN OPTIONAL POBJECT_ATTRIBUTES ObjectAttributes,
@@ -13,7 +16,7 @@ using NtCreateSection = NTSTATUS(NTAPI*)(
 	IN ULONG SectionAttributes,
 	IN OPTIONAL HANDLE FileHandle);
 
-using NtMapViewOfSection = NTSTATUS(NTAPI*)(
+using fnNtMapViewOfSection = NTSTATUS(NTAPI*)(
 	IN HANDLE SectionHandle,
 	IN HANDLE ProcessHandle,
 	IN OUT PVOID* BaseAddress,
@@ -25,7 +28,7 @@ using NtMapViewOfSection = NTSTATUS(NTAPI*)(
 	IN ULONG AllocationType,
 	IN ULONG Win32Protect);
 
-using NtUnmapViewOfSection = NTSTATUS(NTAPI*)(
+using fnNtUnmapViewOfSection = NTSTATUS(NTAPI*)(
 	IN HANDLE ProcessHandle,
 	IN PVOID BaseAddress OPTIONAL);
 
@@ -36,30 +39,31 @@ typedef enum _SECTION_INHERIT : DWORD {
 #endif
 
 #if defined(USE_EXECUTE_HIJACK)
-using NtGetContextThread = NTSTATUS(NTAPI*)(
+using fnNtGetContextThread = NTSTATUS(NTAPI*)(
 	IN HANDLE ThreadHandle,
 	IN OUT PCONTEXT ThreadContext);
 
-using NtSetContextThread = NTSTATUS(NTAPI*)(
+using fnNtSetContextThread = NTSTATUS(NTAPI*)(
 	IN HANDLE ThreadHandle,
 	IN PCONTEXT ThreadContext);
 
-using NtResumeThread = NTSTATUS(NTAPI*)(
+using fnNtResumeThread = NTSTATUS(NTAPI*)(
 	IN HANDLE ThreadHandle,
 	OUT OPTIONAL PULONG PreviousSuspendCount);
 #endif
 
 typedef struct _NT_APIS {
     // Function pointers go here as phases are implemented.
+	fnNtClose ntClose;
 #if defined(USE_ALLOCATE_SECTION)
-    NtCreateSection ntCreateSection;
-	NtMapViewOfSection ntMapViewOfSection;
-	NtUnmapViewOfSection ntUnmapViewOfSection;
+    fnNtCreateSection ntCreateSection;
+	fnNtMapViewOfSection ntMapViewOfSection;
+	fnNtUnmapViewOfSection ntUnmapViewOfSection;
 #endif
 #if defined(USE_EXECUTE_HIJACK)
-	NtGetContextThread ntGetContextThread;
-	NtSetContextThread ntSetContextThread;
-	NtResumeThread ntResumeThread;
+	fnNtGetContextThread ntGetContextThread;
+	fnNtSetContextThread ntSetContextThread;
+	fnNtResumeThread ntResumeThread;
 #endif
 } NT_APIS;
 

