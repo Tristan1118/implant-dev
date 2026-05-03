@@ -12,7 +12,7 @@ typedef struct _INJECT_CTX {
     BOOL                isSuspended;
     DWORD               pid;
 
-    PVOID               remoteBase;
+    PVOID               remoteBase; // remote shellcode address
     SIZE_T              shellcodeSize;
     std::vector<BYTE>   shellcode;
     ULONG               oldProtect;

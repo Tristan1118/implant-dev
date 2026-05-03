@@ -41,7 +41,7 @@
 int main() {
     wprintf(L"[*] Target: %s\n", INJECTION_TARGET_PATH);
 
-    INJECT_CTX ctx = {0};
+    INJECT_CTX ctx = {};
     if (!NtapiInit(&ctx.api)) {
         printf("[-] Failed to resolve NTAPI\n");
         return 1;
@@ -67,7 +67,7 @@ allocate:
 #if defined(USE_ALLOCATE_VALLOC)
     if (!AllocateMemory_VAlloc(&ctx)) goto cleanup;
 #elif defined(USE_ALLOCATE_SECTION)
-    if (!AllocateMemory_Section(&ctx)) goto cleanup;
+    if (!AllocateMemory_Section(&ctx)) goto execute; // skip write and protect
 #else
     #error "No allocate technique selected"
 #endif
