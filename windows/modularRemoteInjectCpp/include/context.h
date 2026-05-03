@@ -6,9 +6,10 @@
 
 typedef struct _INJECT_CTX {
     NT_APIS             api;
-    PROCESS_INFORMATION pi;
+    PROCESS_INFORMATION processInfo;
     HANDLE              hProcess;
     HANDLE              hThread;
+    BOOL                isSuspended;
     DWORD               pid;
 
     PVOID               remoteBase;
