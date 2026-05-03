@@ -42,7 +42,7 @@
 #include "phases/cleanup/cleanup.h"
 
 int main() {
-    wprintf(L"[*] Target: %s\n", INJECTION_TARGET_PATH);
+    DBG("Target: %s", INJECTION_TARGET_PATH);
 
     INJECT_CTX ctx = {};
     if (!NtapiInit(&ctx.api)) {

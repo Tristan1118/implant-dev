@@ -13,12 +13,13 @@
                 "USE_SHELLCODE_FETCH_HTTP": "ON",
                 "USE_CREATE_SUSPENDED":      "ON",
                 "USE_CREATE_PPID_SPOOF":     "OFF",
-                "USE_ALLOCATE_VALLOC":       "ON",
-                "USE_ALLOCATE_SECTION":      "OFF",
+                "USE_ALLOCATE_VALLOC":       "OFF",
+                "USE_ALLOCATE_SECTION":      "ON",
                 "USE_WRITE_WPM":             "ON",
                 "USE_PROTECT_VPROTECT":      "ON",
-                "USE_EXECUTE_REMOTE_THREAD": "ON",
-                "USE_EXECUTE_APC":           "OFF"
+                "USE_EXECUTE_REMOTE_THREAD": "OFF",
+                "USE_EXECUTE_APC": "OFF",
+                "USE_EXECUTE_HIJACK":  "ON"
             },
             "condition": {
                 "type": "equals",
